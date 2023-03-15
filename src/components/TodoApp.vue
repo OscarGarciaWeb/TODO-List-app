@@ -1,55 +1,41 @@
-<script setup lang="ts">
-  defineProps<{msg: string}>()
-</script>
-
 <template>
-  <h1>TODO List</h1>
-  <h4>{{ msg }}</h4>
+  <h2>TODO List</h2>
 
-  <div class="d-flex p-2">
-     <input v-model="task" type="text" placeholder="Introduzca tarea" class="form-control mx-2">
-     <button @click="submitTask" class="btn btn-warning">Enviar</button> 
+  <div v-if="!dialog" class="d-flex p-2">
+    <button @click="dialog = true" class="btn btn-primary">Add Task</button> 
   </div>
 
-  <!-- <div>
-    <v-data-table headers="headers" items="tasks">
-      <template v-slot:item.actions="{ item }">
-        <v-icon
-          small
-          class="mr-2"
-          @click="editTask(item)"
-        >
-          mdi-pencil
-        </v-icon>
-        <v-icon
-          small
-          @click="deleteTask(item)"
-        >
-          mdi-delete
-        </v-icon>
-      </template>
-    </v-data-table>
-  </div>  -->
-
-
-  
+  <div v-if="dialog" class="d-flex p-2">
+    <input v-model="task" type="text" placeholder="Write Task" class="form-control mr-2">
+    <input v-model="stat" type="text" placeholder="Select Status" class="form-control mx-2" readonly>    
+    <div class="dropdown">
+      <button class="btn btn-primary mx-2 dropdown-toggle" @click="show = true">Status</button>
+      <ul class="dropdown-menu" :class="{ show: show }">
+        <li><a class="dropdown-item" @click="stat = 'To-do', show = false">To-do</a></li>
+        <li><a class="dropdown-item" @click="stat = 'In-Progress', show = false">In-progress</a></li>
+        <li><a class="dropdown-item" @click="stat = 'Finished', show = false">Finished</a></li>
+      </ul>
+    </div>
+    <button @click="submitTask" class="btn btn-success">Save</button> 
+    <button @click="dialog = false" class="btn btn-danger mx-2">Close</button> 
+  </div>
 
   <div class="d-flex p-2 mt-2">
     <table class="table table-bordered">
       <thead>
         <tr>
-          <th scope="col">Task</th>
-          <th scope="col">Status</th>
-          <th scope="col" class="text-center">Edit</th>
-          <th scope="col" class="text-center">Delete</th>
+          <th scope="col"><b>Task</b></th>
+          <th scope="col"><b>Status</b></th>
+          <th scope="col" class="text-center"><b>Edit</b></th>
+          <th scope="col" class="text-center"><b>Delete</b></th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(task, index) in tasks" :key="index">
-          <td style="width: 350px;">
-          <input :class="{'finished': task.status === 'Finished'}" v-model="task.name" type="text" class="form-control ml-2 mr-4">
+          <td style="width: 500px;">
+            <input :class="{'finished': task.status === 'Finished'}" v-model="task.name" type="text" class="form-control ml-2 mr-4">
           </td>
-          <td>
+          <td style="width: 200px;">
               <div class="dropdown">
                 <button class="btn dropdown-toggle" :id=index.toString() @click="openMenu(index)" 
                   :class="{ 
@@ -67,12 +53,12 @@
                 </ul>
               </div>
           </td>
-          <td>
+          <td style="width: 100px;">
             <div class="text-center" @click="editTask(index)">
               <span class="fa fa-pen" color="blue"> </span>  
             </div>
           </td>
-          <td>
+          <td style="width: 100px;">
             <div class="text-center" @click="deleteTask(index)">
               <span class="fa fa-trash" color="red"> </span>  
             </div>
@@ -81,17 +67,20 @@
       </tbody>
     </table>
   </div>
+
 </template>
 <script lang="ts">
   export default{
     data(){
       return {
         task:'',
+        stat:'',
+        taskname:'',
         menu: -1,
         value: '',
-        editItem:null,
-        avaliableStatus: ['To-do','In-Progress','Finished'],
-        showMenu: false,
+        dialog: false,
+        show: false,
+        editItem: null,
         tasks: 
         [
           {
@@ -106,27 +95,6 @@
       }
     },
     methods: {
-      submitTask(){
-        if (this.task.length === 0) return;
-        if (this.editItem === null) {
-          this.tasks.push({
-            name: this.task,
-            status: 'To-do'
-          })          
-        }
-        else{
-          this.tasks[this.editItem].name = this.task;
-          this.editItem = null;
-        }
-        this.task = '';
-      },
-      deleteTask(index: any) {
-        this.tasks.splice(index,1);
-      },
-      editTask(index: any) {
-        this.task = this.tasks[index].name;
-        this.editItem = index;
-      },
       changeStatus(index: any, value: string){
         if (value === 'todo') {
           this.tasks[index].status = 'To-do';
@@ -148,9 +116,34 @@
           this.menu = index;
         }
       },
+      submitTask(){
+        if (this.task.length === 0) return;
+        if (this.editItem === null) {
+          this.tasks.push({
+            name: this.task,
+            status: this.stat
+          })          
+          this.dialog = false;
+        }
+        else{
+          this.tasks[this.editItem].name = this.task;
+          this.editItem = null;
+        }
+        this.task = '';
+        this.stat = '';
+      },
+      deleteTask(index: any) {
+        this.tasks.splice(index,1);
+      },
+      editTask(index: any) {
+        this.taskname = this.tasks[index].name;
+        this.task = this.tasks[index].name;
+        this.editItem = index;
+      },
     }
   }
 </script>
+
 <style>
   @media (prefers-color-scheme: dark) {
       body 
@@ -181,6 +174,6 @@
   .end
   {
     font-weight: bolder;
-    color:greenyellow;
+    color:rgb(37, 224, 0);
   }
 </style>
