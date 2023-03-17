@@ -1,25 +1,28 @@
 <template>
   <h2>TODO List</h2>
-
+  <!-- START New tas section -->
   <div v-if="!dialog" class="d-flex p-2">
     <button @click="dialog = true" class="btn btn-primary">Add Task</button> 
   </div>
-
-  <div v-if="dialog" class="d-flex p-2">
-    <input v-model="task" type="text" placeholder="Write Task" class="form-control mr-2">
-    <input v-model="stat" type="text" placeholder="Select Status" class="form-control mx-2" readonly>    
-    <div class="dropdown">
-      <button class="btn btn-primary mx-2 dropdown-toggle" @click="show = true">Status</button>
-      <ul class="dropdown-menu" :class="{ show: show }">
-        <li><a class="dropdown-item" @click="stat = 'To-do', show = false">To-do</a></li>
-        <li><a class="dropdown-item" @click="stat = 'In-Progress', show = false">In-progress</a></li>
-        <li><a class="dropdown-item" @click="stat = 'Finished', show = false">Finished</a></li>
-      </ul>
-    </div>
-    <button @click="submitTask" class="btn btn-success">Save</button> 
-    <button @click="dialog = false" class="btn btn-danger mx-2">Close</button> 
+  <!-- END New tas section -->
+  <!-- START Create Task -->
+  <div v-if="dialog" class="d-flex">
+    <input v-model="task" type="text" placeholder="Write Task" class="form-control mx-2">
+    <td>
+      <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle ml-2" @click="show = true">{{ stat }}</button>      
+        <ul class="dropdown-menu" :class="{ show: show }">
+          <li><a class="dropdown-item" @click="stat = 'To-do', show = false">To-do</a></li>
+          <li><a class="dropdown-item" @click="stat = 'In-Progress', show = false">In-progress</a></li>
+          <li><a class="dropdown-item" @click="stat = 'Finished', show = false">Finished</a></li>
+        </ul>
+      </div>
+    </td>
+    <button @click="submitTask" class="btn btn-success mx-2">Save</button> 
+    <button @click="closeMenu" class="btn btn-danger ml-1">Close</button>
   </div>
-
+  <!-- END Create Task -->
+  <!-- START Table with Status, Delete and Update -->
   <div class="d-flex p-2 mt-2">
     <table class="table table-bordered">
       <thead>
@@ -67,20 +70,20 @@
       </tbody>
     </table>
   </div>
-
+  <!-- START Table with Status, Delete and Update -->
 </template>
 <script lang="ts">
+
   export default{
     data(){
       return {
-        task:'',
-        stat:'',
-        taskname:'',
         menu: -1,
         value: '',
-        dialog: false,
-        show: false,
+        task:'',
+        stat: 'To-do',
         editItem: null,
+        show: false,
+        dialog: false,
         tasks: 
         [
           {
@@ -91,23 +94,14 @@
           name: 'Comprar Pan',
           status: 'In-Progress'
           },
+          {
+          name: 'Hacer yoga',
+          status: 'Finished'
+          },
         ]
       }
     },
-    methods: {
-      changeStatus(index: any, value: string){
-        if (value === 'todo') {
-          this.tasks[index].status = 'To-do';
-          this.menu = -1;
-        } else if (value === 'inprogress') {
-          this.tasks[index].status = 'In-Progress';
-          this.menu = -1;
-        }
-        else{
-          this.tasks[index].status = 'Finished';
-          this.menu = -1;
-        }
-      },   
+    methods: {   
       openMenu(index: any) {
         if (index === this.menu) {
           this.menu = -1;
@@ -115,6 +109,14 @@
         else{
           this.menu = index;
         }
+      },
+      closeMenu(){
+        this.dialog = false;
+        this.clearData();
+      },
+      clearData(){
+        this.task = '';
+        this.stat = 'To-do';
       },
       submitTask(){
         if (this.task.length === 0) return;
@@ -129,17 +131,31 @@
           this.tasks[this.editItem].name = this.task;
           this.editItem = null;
         }
-        this.task = '';
-        this.stat = '';
+        this.dialog = false;
+        this.clearData();
+      },
+      editTask(index: any) {
+        this.dialog = true;
+        this.task = this.tasks[index].name;
+        this.stat = this.tasks[index].status;
+        this.editItem = index;
       },
       deleteTask(index: any) {
         this.tasks.splice(index,1);
       },
-      editTask(index: any) {
-        this.taskname = this.tasks[index].name;
-        this.task = this.tasks[index].name;
-        this.editItem = index;
-      },
+      changeStatus(index: any, value: string){
+        if (value === 'todo') {
+          this.tasks[index].status = 'To-do';
+          this.menu = -1;
+        } else if (value === 'inprogress') {
+          this.tasks[index].status = 'In-Progress';
+          this.menu = -1;
+        }
+        else{
+          this.tasks[index].status = 'Finished';
+          this.menu = -1;
+        }
+      }
     }
   }
 </script>
