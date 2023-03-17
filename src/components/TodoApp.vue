@@ -1,27 +1,31 @@
 <template>
   <h2>TODO List</h2>
-  <!-- START New tas section -->
-  <div v-if="!dialog" class="d-flex p-2">
-    <button @click="dialog = true" class="btn btn-primary">Add Task</button> 
-  </div>
-  <!-- END New tas section -->
-  <!-- START Create Task -->
-  <div v-if="dialog" class="d-flex">
-    <input v-model="task" type="text" placeholder="Write Task" class="form-control mx-2">
-    <td>
-      <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle ml-2" @click="show = true">{{ stat }}</button>      
-        <ul class="dropdown-menu" :class="{ show: show }">
-          <li><a class="dropdown-item" @click="stat = 'To-do', show = false">To-do</a></li>
-          <li><a class="dropdown-item" @click="stat = 'In-Progress', show = false">In-progress</a></li>
-          <li><a class="dropdown-item" @click="stat = 'Finished', show = false">Finished</a></li>
-        </ul>
-      </div>
-    </td>
-    <button @click="submitTask" class="btn btn-success mx-2">Save</button> 
-    <button @click="closeMenu" class="btn btn-danger ml-1">Close</button>
-  </div>
-  <!-- END Create Task -->
+  <!-- START Modal -->
+    <div>
+      <button class="btn btn-primary mx-2 my-2" @click="showModal = true">Modal Add Task</button>
+      <BasicModal v-if="showModal" @closeModal="closeModal">
+        <template v-slot:header>
+          <h2>Create task</h2>
+        </template>
+        <template v-slot:body>          
+          <div class="d-flex">
+            <input v-model="task" type="text" placeholder="Write Task" class="form-control mx-2">
+            <td>
+              <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle ml-2" @click="show = true">{{ stat }}</button>      
+                <ul class="dropdown-menu" :class="{ show: show }">
+                  <li><a class="dropdown-item" @click="stat = 'To-do', show = false">To-do</a></li>
+                  <li><a class="dropdown-item" @click="stat = 'In-Progress', show = false">In-progress</a></li>
+                  <li><a class="dropdown-item" @click="stat = 'Finished', show = false">Finished</a></li>
+                </ul>
+              </div>
+            </td>
+            <button @click="submitTask" class="btn btn-success mx-2">Save</button> 
+          </div>
+        </template>
+      </BasicModal>
+    </div>
+  <!-- END Modal -->
   <!-- START Table with Status, Delete and Update -->
   <div class="d-flex p-2 mt-2">
     <table class="table table-bordered">
@@ -74,7 +78,9 @@
 </template>
 <script lang="ts">
 
+  import BasicModal from "./BasicModal.vue";
   export default{
+  components: { BasicModal },
     data(){
       return {
         menu: -1,
@@ -84,6 +90,7 @@
         editItem: null,
         show: false,
         dialog: false,
+        showModal: false,
         tasks: 
         [
           {
@@ -112,6 +119,12 @@
       },
       closeMenu(){
         this.dialog = false;
+        this.showModal = false;
+        this.clearData();
+      },
+      closeModal(){
+        this.dialog = false;
+        this.showModal = false;
         this.clearData();
       },
       clearData(){
@@ -129,12 +142,15 @@
         }
         else{
           this.tasks[this.editItem].name = this.task;
+          this.tasks[this.editItem].status = this.stat;
           this.editItem = null;
         }
         this.dialog = false;
+        this.showModal = false;
         this.clearData();
       },
       editTask(index: any) {
+        this.showModal = true;
         this.dialog = true;
         this.task = this.tasks[index].name;
         this.stat = this.tasks[index].status;
