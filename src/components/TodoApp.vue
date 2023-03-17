@@ -2,7 +2,7 @@
   <h2>TODO List</h2>
   <!-- START Modal -->
     <div>
-      <button class="btn btn-primary mx-2 my-2" @click="showModal = true">Modal Add Task</button>
+      <button class="btn btn-primary mx-2 my-2" @click="showModal = true">Add Task</button>
       <BasicModal v-if="showModal" @closeModal="closeModal">
         <template v-slot:header>
           <h2>Create task</h2>
