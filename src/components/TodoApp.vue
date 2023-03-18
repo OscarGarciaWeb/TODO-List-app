@@ -91,24 +91,35 @@
         show: false,
         dialog: false,
         showModal: false,
-        tasks: 
+        tasks: [{
+            name: '',
+            status: ''
+          }],
+      }
+    },  
+    mounted() {
+      this.saveInitialData();
+    },
+    methods: {
+      saveInitialData(){
+        const taskData = 
         [
           {
-          name: 'Comprar platanos',
-          status: 'To-do'
+            name: 'Comprar platanos',
+            status: 'To-do'
           },
           {
-          name: 'Comprar Pan',
-          status: 'In-Progress'
+            name: 'Comprar Pan',
+            status: 'In-Progress'
           },
           {
-          name: 'Hacer yoga',
-          status: 'Finished'
+            name: 'Hacer yoga',
+            status: 'Finished'
           },
-        ]
-      }
-    },
-    methods: {   
+        ];
+        const storedTasks = localStorage.getItem('tasks');
+        this.tasks = storedTasks ? JSON.parse(storedTasks) : taskData;
+      },
       openMenu(index: any) {
         if (index === this.menu) {
           this.menu = -1;
@@ -137,14 +148,17 @@
           this.tasks.push({
             name: this.task,
             status: this.stat
-          })          
-          this.dialog = false;
+          })
         }
         else{
           this.tasks[this.editItem].name = this.task;
           this.tasks[this.editItem].status = this.stat;
           this.editItem = null;
         }
+        
+        // Almacenar en localStorage
+        localStorage.setItem('tasks', JSON.stringify(this.tasks));
+
         this.dialog = false;
         this.showModal = false;
         this.clearData();
@@ -157,7 +171,10 @@
         this.editItem = index;
       },
       deleteTask(index: any) {
-        this.tasks.splice(index,1);
+        this.tasks.splice(index,1);        
+
+        // Actualizar localStorage
+        localStorage.setItem('tasks', JSON.stringify(this.tasks));
       },
       changeStatus(index: any, value: string){
         if (value === 'todo') {
