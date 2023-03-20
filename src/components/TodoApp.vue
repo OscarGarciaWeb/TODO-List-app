@@ -74,7 +74,7 @@
       </tbody>
     </table>
   </div>
-  <!-- START Table with Status, Delete and Update -->
+  <!-- END Table with Status, Delete and Update -->
 </template>
 <script lang="ts">
 
@@ -91,13 +91,18 @@
         show: false,
         dialog: false,
         showModal: false,
-        tasks: [{
+        tasks: [
+          {
             name: '',
             status: ''
-          }],
+          }
+        ],
       }
     },  
     mounted() {
+      // Limpiamos el localStorage
+      localStorage.clear();
+      // Grabamos los datos del listado
       this.saveInitialData();
     },
     methods: {
@@ -105,11 +110,11 @@
         const taskData = 
         [
           {
-            name: 'Comprar platanos',
+            name: 'Leer libros',
             status: 'To-do'
           },
           {
-            name: 'Comprar Pan',
+            name: 'Aprender Ts y Vue Js',
             status: 'In-Progress'
           },
           {
@@ -155,7 +160,7 @@
           this.tasks[this.editItem].status = this.stat;
           this.editItem = null;
         }
-        
+
         // Almacenar en localStorage
         localStorage.setItem('tasks', JSON.stringify(this.tasks));
 
