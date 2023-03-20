@@ -21,6 +21,11 @@ If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has a
 
 See [Vite Configuration Reference](https://vitejs.dev/config/).
 
+## Project TODO List Screenshot
+</br>
+
+![Screenshot TODO List](/src/assets/Todo_list.jpg)
+
 ## Project Setup
 
 ```sh
@@ -37,10 +42,4 @@ npm run dev
 
 ```sh
 npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
 ```
