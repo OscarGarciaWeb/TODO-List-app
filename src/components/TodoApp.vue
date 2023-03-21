@@ -27,7 +27,7 @@
     </div>
   <!-- END Modal -->
   <!-- START Table with Status, Delete and Update -->
-  <div class="d-flex p-2 mt-2">
+  <div>
     <table class="table table-bordered">
       <thead>
         <tr>
@@ -76,8 +76,8 @@
   </div>
   <!-- END Table with Status, Delete and Update -->
 </template>
-<script lang="ts">
 
+<script lang="ts">
   import BasicModal from "./BasicModal.vue";
   export default{
   components: { BasicModal },

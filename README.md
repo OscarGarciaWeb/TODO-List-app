@@ -26,6 +26,11 @@ See [Vite Configuration Reference](https://vitejs.dev/config/).
 
 ![Screenshot TODO List](/src/assets/Todo_list.jpg)
 
+## TODO List Example
+</br>
+
+![Alt Text](/src/assets/TODO%20List.gif)
+
 ## Project Setup
 
 ```sh

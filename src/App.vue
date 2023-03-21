@@ -4,8 +4,8 @@
 
 <template>
   <header>
-    <img alt="TODO logo" class="logo" src="@/assets/to-do-list.png" width="125" height="125" />
-    <div class="wrapper">
+    <div>
+      <img alt="TODO logo" class="logo" src="@/assets/to-do-list.png" width="125" height="125" />
       <TodoApp/>
     </div>
   </header>
